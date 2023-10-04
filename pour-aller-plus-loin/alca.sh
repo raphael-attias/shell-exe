@@ -3,7 +3,6 @@
 email="raphael.attias@laplateforme.io"
 password="wCNDF2FW"
 
-url="https://alcasar.laplateforme.io"
+url="https://alcasar.laplateforme.io/intercept.php"
 
-curl -H -d "email=$email&password=$password" -X POST $url
-
+curl -s -d "{\"email\":\"$email\",\"password\":\"$password\"}" -X POST $url
