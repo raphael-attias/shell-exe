@@ -4,17 +4,20 @@
 csv_file="Shell_Userlist.csv"
 
 # Parcours du fichier CSV
-while IFS=',' read -r username role; do
+while IFS=',' read -r id prenom nom mdp role; do
 
-    if [ "$role" = "admin" ]; then
-        # Créer l'utilisateur avec des privilèges de superutilisateur
-        sudo useradd -m -G sudo "$username"
-        echo "Utilisateur $username créé avec des privilèges de superutilisateur."
+ # Créer un utilisateur avec le nom d'utilisateur du CSV
+ sudo useradd -m -s /bin/bash -c "$prenom $nom" "$prenom$nom"
 
-    else
-        # Créer un utilisateur normal
-        sudo useradd -m "$username"
-        echo "Utilisateur $username créé."
-    fi
-    
+ # Définir le mot de passe pour l'utilisateur
+ echo "$prenom$nom:$mdp" | sudo chpasswd
+
+ # Vérifier le rôle pour attribuer des privilèges
+ if [ "$role" = "Admin" ]; then
+ sudo usermod -aG sudo "$prenom$nom"
+ echo "Utilisateur $prenom $nom créé avec des privilèges de superutilisateur."
+ else
+ echo "Utilisateur $prenom $nom créé en tant qu'utilisateur standard."
+ fi
+ 
 done <"$csv_file"
